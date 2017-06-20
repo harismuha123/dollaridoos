@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { Http } from '@angular/http';
 
 interface ResponseType {
-  base: string;
-  date: string;
-  rates: {[key: string]: number};
+  convertedAmount: number;
+  fromCurrency: string;
+  toCurrency: string;
+  amount: number;
 }
 
 @Component({
@@ -15,28 +16,21 @@ interface ResponseType {
 export class AppComponent {
 
   private http: Http;
-  private nesto: ResponseType;
-  private currencies: string[];
+  private currencyType: ResponseType;
   private finalValue: number;
-  private currencyValues = {
-    'AUD': {
-      'EUR': 0.68,
-      'BGN': 1.22
-    }
-  }
+  private value: ResponseType;
 
   constructor(http: Http) {
     this.http = http;
-    this.http.get('https://api.fixer.io/latest?base=USD').subscribe((res) => {
-      this.nesto = res.json();
-      this.currencies = Object.keys(this.nesto.rates);
+    this.http.get('http://localhost:5000/converter/list').subscribe((res) => {
+      this.currencyType = res.json();
     });
   }
 
   convertValue(initialValue, initialKey, finalKey) {
-    if (this.currencyValues[initialKey]) {
-      this.finalValue = initialValue * this.currencyValues[initialKey][finalKey];
-    }
-    console.log('Value not available');
+    this.http.get('http://localhost:5000/converter/convert?fromCurrency='+initialKey+'&toCurrency='+finalKey+'&amount='+initialValue).subscribe((val) => {
+      this.value = val.json();
+      this.finalValue = this.value.convertedAmount;
+    });
   }
 }
