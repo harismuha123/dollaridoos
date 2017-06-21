@@ -1,6 +1,6 @@
 
   <form action="submit">
-  <input type="text"  [(ngModel)]="initialValue" name="initial">
+  <input type="text"  [(ngModel)]="initialValue" name="initial" (keyup)="onKey($event)" >
   <select [(ngModel)]="initialKey" name="initialKey">
     <option *ngFor="let key of currencyType" [ngValue]="key">{{ key }}</option>
   </select> 
@@ -8,10 +8,6 @@
   <select [(ngModel)]="finalKey" name="finalKey">
     <option *ngFor="let key of currencyType" [ngValue]="key">{{ key }}</option>
   </select> 
-
-  <button (click)="convertValue(initialValue, initialKey, finalKey)">
-    Convert!!!
-  </button>
   </form>
   
   

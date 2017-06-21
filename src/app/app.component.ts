@@ -17,8 +17,11 @@ export class AppComponent {
 
   private http: Http;
   private currencyType: ResponseType;
-  private finalValue: number;
   private value: ResponseType;
+  private initialValue: number;
+  private finalValue: number;
+  private initialKey: string;
+  private finalKey: string;
 
   constructor(http: Http) {
     this.http = http;
@@ -27,8 +30,8 @@ export class AppComponent {
     });
   }
 
-  convertValue(initialValue, initialKey, finalKey) {
-    this.http.get('http://localhost:5000/converter/convert?fromCurrency='+initialKey+'&toCurrency='+finalKey+'&amount='+initialValue).subscribe((val) => {
+  onKey(event: any) {
+    this.http.get('http://localhost:5000/converter/convert?fromCurrency='+this.initialKey+'&toCurrency='+this.finalKey+'&amount='+this.initialValue).subscribe((val) => {
       this.value = val.json();
       this.finalValue = this.value.convertedAmount;
     });
